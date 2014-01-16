@@ -1,11 +1,6 @@
 #include <QtGui>
-
 #include "imageviewer.h"
-
-
-
 #include <QDebug>
-
 
  ImageViewer::ImageViewer()
  {
@@ -53,41 +48,44 @@
      }
  }
 
+ void ImageViewer::blur(){
+     QImage * newImage = m_image;
 
+     int kernel [5][5]= {{0,0,1,0,0},
+                         {0,1,3,1,0},
+                         {1,3,7,3,1},
+                         {0,1,3,1,0},
+                         {0,0,1,0,0}};
+     int kernelSize = 5;
+     int sumKernel = 27;
+     int r,g,b;
+     QColor color;
 
- void ImageViewer::blur()
-     {
-     qDebug() << "aklsjdskld";
-/*
-     // Variables that'll contain a pixel and its grayscale value
-          QRgb pixel;
-          int blur;
+     for(int x=kernelSize/2; x<newImage->width()-(kernelSize/2); x++){
+         for(int y=kernelSize/2; y<newImage->height()-(kernelSize/2); y++){
 
-          // convert the pixmap the imageLabel to an QImage
-          QImage image = imageLabel->pixmap()->toImage();
+             r = 0;
+             g = 0;
+             b = 0;
 
-          // Get its dimensions
-          int width = imageLabel->pixmap()->width();
-          int height = imageLabel->pixmap()->height();
-          int max_length = (i -1);
+             for(int i = -kernelSize/2; i<= kernelSize/2; i++){
+                 for(int j = -kernelSize/2; j<= kernelSize/2; j++){
+                     color = QColor(m_image->pixel(x+i, y+j));
+                     r += color.red()*kernel[kernelSize/2+i][kernelSize/2+j];
+                     g += color.green()*kernel[kernelSize/2+i][kernelSize/2+j];
+                     b += color.blue()*kernel[kernelSize/2+i][kernelSize/2+j];
+                 }
+             }
 
-              for (int j = 0; j < height; ++j)
-              {
-                  pixel = image.pixel(j, i);
-                  blur = qBlur(pixel);
-                  for ( int i = 1; i < MAX_LENGTH; i = i + 2 )
-                   { Blur( width, height, Size( i, i ), 0, 0 );
-                     if( hight( DELAY_BLUR ) != 0 ) { return 0; } }
+             r = qBound(0, r/sumKernel, 255);
+             g = qBound(0, g/sumKernel, 255);
+             b = qBound(0, b/sumKernel, 255);
 
-        }
-           // Overwrite the imageLabel with the new grayscale one
-           imageLabel->setPixmap(QPixmap::fromImage(image));
-       }
+             newImage->setPixel(x,y, qRgb(r,g,b));
 
-
-
-*/
-
+         }
+     }
+     drawImage();
  }
 
  void ImageViewer::sharpen(){
