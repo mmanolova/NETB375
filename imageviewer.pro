@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2014-01-13T17:34:19
+# Project created by QtCreator 2013-12-29T18:40:55
 #
 #-------------------------------------------------
 
@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = imageviewer
+TARGET = untitled8
 TEMPLATE = app
 
 
