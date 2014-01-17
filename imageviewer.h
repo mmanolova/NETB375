@@ -2,7 +2,6 @@
 #define IMAGEVIEWER_H
 
 #include <QMainWindow>
-#include <QMainWindow>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QAction>
@@ -11,11 +10,10 @@
 #include <QLabel>
 #include <QScrollBar>
 #include <QMenuBar>
-#include <QtPrintSupport\qprinter.h>
 #include <QDialog>
 #include <QImage>
 #include <QPixmap>
-#include <QGraphicsBlurEffect>
+#include <QDebug>
 
 class QAction;
 class QLabel;
@@ -33,6 +31,7 @@ public:
 private slots:
 
     void open();
+    void save();
     void blur();
     void sharpen();
 
@@ -47,11 +46,14 @@ private:
 
     QAction *openAct;
     QAction *exitAct;
+    QAction *saveAct;
     QAction *blurAct;
     QAction *sharpenAct;
     QMenu *fileMenu;
     QMenu *editMenu;
     QImage* m_image;
+    QString   m_fileName;
+    
 };
 
 #endif
