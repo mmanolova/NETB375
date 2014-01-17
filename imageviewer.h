@@ -32,6 +32,8 @@ private slots:
 
     void open();
     void save();
+    void saveAs();
+    void grayscale();
     void blur();
     void sharpen();
 
@@ -45,15 +47,16 @@ private:
     double scaleFactor;
 
     QAction *openAct;
-    QAction *exitAct;
     QAction *saveAct;
+    QAction *saveAsAct;
+    QAction *grayscaleAct;
+    QAction *exitAct;
     QAction *blurAct;
     QAction *sharpenAct;
-    QMenu *fileMenu;
-    QMenu *editMenu;
-    QImage* m_image;
+    QMenu   *fileMenu;
+    QMenu   *editMenu;
+    QImage   *m_image;
     QString   m_fileName;
-    
 };
 
 #endif
