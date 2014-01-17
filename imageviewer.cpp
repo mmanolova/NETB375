@@ -4,11 +4,14 @@
 
  ImageViewer::ImageViewer()
  {
+
+     // Creating new QLabel
      imageLabel = new QLabel;
      imageLabel->setBackgroundRole(QPalette::Base);
      imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
      imageLabel->setScaledContents(true);
 
+     // Creating new QScrollArea
      scrollArea = new QScrollArea;
      scrollArea->setBackgroundRole(QPalette::Dark);
      scrollArea->setWidget(imageLabel);
@@ -16,13 +19,14 @@
 
      createActions();
      createMenus();
-
+     // Adding the name of the GUI
      setWindowTitle(tr("Image Viewer"));
      resize(500, 400);
 }
 
  void ImageViewer::drawImage()
  {
+     // Using the pointer when an image is emplty
      if (m_image->isNull()) {
 
          return;
@@ -33,15 +37,17 @@
 
  void ImageViewer::open()
  {
+     // Opening an image in one of those formats
      m_fileName = QFileDialog::getOpenFileName(this,
                                      tr("Open File"), " ",
                                      tr("JPEG (*.jpg *,jpeg );; BitMap(*.bmp);; TIF (*.tif);; PNG(*.png)"));
+     // Checking if the filename is empty
      if (!m_fileName.isEmpty()) {
          m_image = new QImage(m_fileName);
          drawImage();
          scaleFactor = 1.0;
 
-
+         // Enabling the functions when an image is opened
          saveAct->setEnabled(true);
          saveAsAct->setEnabled(true);
          blurAct->setEnabled(true);
@@ -57,6 +63,7 @@
 
       if (!m_fileName.isEmpty()){
           if (m_image->isNull()) {
+
               QMessageBox::information(this, tr("Image Viewer"),
                                        tr("Cannot save %1.").arg(m_fileName));
               return;
@@ -113,6 +120,8 @@
  void ImageViewer::blur(){
      QImage * newImage = m_image;
 
+
+     // the matrix for the blurring
      int kernel [5][5]= {{0,0,1,0,0},
                          {0,1,3,1,0},
                          {1,3,7,3,1},
@@ -131,6 +140,8 @@
              g = 0;
              b = 0;
 
+
+             // The blurring algorithm
              for(int i = -kernelSize/2; i<= kernelSize/2; i++){
                  for(int j = -kernelSize/2; j<= kernelSize/2; j++){
                      color = QColor(m_image->pixel(x+i, y+j));
@@ -154,6 +165,7 @@
  void ImageViewer::sharpen(){
      QImage * newImage = m_image;
 
+     // The matrix for the sharpening
      int kernel [5][5]= {{0,0,-1,0,0},
                          {0,-1,6,-1,0},
                          {-1,6,14,6,-1},
@@ -172,6 +184,7 @@
              g = 0;
              b = 0;
 
+             // The same algorithm with different matrix
              for(int i = -kernelSize/2; i<= kernelSize/2; i++){
                  for(int j = -kernelSize/2; j<= kernelSize/2; j++){
                      color = QColor(m_image->pixel(x+i, y+j));
@@ -194,6 +207,8 @@
 
   void ImageViewer::createActions()
   {
+      // Connecting the SIGNALS with the SLOTS
+
       openAct = new QAction(tr("&Open"), this);
       openAct->setShortcut(tr("Ctrl+O"));
       connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
@@ -229,6 +244,8 @@
 
   void ImageViewer::createMenus()
   {
+      // Adding the functions to the Menus
+
       fileMenu = new QMenu(tr("&File"), this);
       fileMenu->addAction(openAct);
       fileMenu->addAction(saveAct);
