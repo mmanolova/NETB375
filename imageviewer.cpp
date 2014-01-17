@@ -1,6 +1,7 @@
 #include <QtGui>
 #include "imageviewer.h"
 
+
  ImageViewer::ImageViewer()
  {
      imageLabel = new QLabel;
@@ -18,7 +19,6 @@
 
      setWindowTitle(tr("Image Viewer"));
      resize(500, 400);
-
 }
 
  void ImageViewer::drawImage()
@@ -29,8 +29,9 @@
      }
      imageLabel->setPixmap(QPixmap::fromImage(*m_image));
  }
- 
-void ImageViewer::open()
+
+
+ void ImageViewer::open()
  {
      m_fileName = QFileDialog::getOpenFileName(this,
                                      tr("Open File"), " ",
@@ -42,13 +43,13 @@ void ImageViewer::open()
 
          blurAct->setEnabled(true);
          sharpenAct->setEnabled(true);
+         grayscaleAct->setEnabled(true);
          imageLabel->adjustSize();
-         
+
      }
  }
- 
 
-void ImageViewer::save()
+ void ImageViewer::save()
   {
 
       if (!m_fileName.isEmpty()){
@@ -60,6 +61,50 @@ void ImageViewer::save()
 
           m_image->save(m_fileName);
       }
+  }
+
+ void ImageViewer::saveAs()
+   {
+       QString fileName = QFileDialog::getSaveFileName(this,
+                                                       tr("Save Image"), "",
+                                                       tr("JPEG (*.jpg *,jpeg );; BitMap(*.bmp);; TIF (*.tif);; PNG(*.png)"));
+
+       if (!fileName.isEmpty()) {
+
+
+           if (m_image->isNull()) {
+               QMessageBox::information(this, tr("Image Viewer"),
+                                        tr("Cannot save %1.").arg(fileName));
+               return;
+           }
+
+           m_image->save(fileName);
+       }
+   }
+
+  void ImageViewer::grayscale()
+  {
+      // Variables that'll contain a pixel and its grayscale value
+      QRgb pixel;
+      int gray;
+
+      // Get its dimensions
+      int width = imageLabel->pixmap()->width();
+      int height = imageLabel->pixmap()->height();
+
+      // Change each pixel to an grayscale
+      for (int i = 0; i < width; ++i)
+      {
+          for (int j = 0; j < height; ++j)
+          {
+              pixel = m_image->pixel(i, j);
+              gray = qGray(pixel);
+              m_image->setPixel(i, j, qRgb(gray, gray, gray));
+          }
+      }
+
+      // Overwrite the imageLabel with the new grayscale one
+      imageLabel->setPixmap(QPixmap::fromImage(*m_image));
   }
 
  void ImageViewer::blur(){
@@ -105,11 +150,14 @@ void ImageViewer::save()
  void ImageViewer::sharpen(){
      QImage * newImage = m_image;
 
-     int kernel [3][3]= {{0,-1,0},
-                         {-1,5,-1},
-                         {0,-1,0}};
-     int kernelSize = 3;
-     int sumKernel = 1;
+     int kernel [5][5]= {{0,0,-1,0,0},
+                         {0,-1,6,-1,0},
+                         {-1,6,14,6,-1},
+                         {0,-1,6,-1,0},
+                         {0,0,-1,0,0}};
+
+     int kernelSize = 5;
+     int sumKernel = 27;
      int r,g,b;
      QColor color;
 
@@ -145,14 +193,23 @@ void ImageViewer::save()
       openAct = new QAction(tr("&Open"), this);
       openAct->setShortcut(tr("Ctrl+O"));
       connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
-     
+
       saveAct = new QAction(tr("Save"), this);
-      saveAct->setShortcut(tr("Ctrl+O"));
+      saveAct->setShortcut(tr("Ctrl+S"));
       connect(saveAct, SIGNAL(triggered()), this, SLOT(save()));
+
+      saveAsAct = new QAction(tr("SaveAs"), this);
+      saveAsAct->setShortcut(tr("Ctrl+S"));
+      connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
       blurAct = new QAction(tr("Blur"), this);
       blurAct->setEnabled(false);
       connect(blurAct, SIGNAL(triggered()), this, SLOT(blur()));
+
+      grayscaleAct = new QAction(tr("Grayscale"), this);
+      grayscaleAct->setEnabled(false);
+      connect(grayscaleAct, SIGNAL(triggered()), this, SLOT(grayscale()));
+
 
       sharpenAct = new QAction(tr("Sharpen"), this);
       sharpenAct->setEnabled(false);
@@ -169,11 +226,13 @@ void ImageViewer::save()
       fileMenu = new QMenu(tr("&File"), this);
       fileMenu->addAction(openAct);
       fileMenu->addAction(saveAct);
+      fileMenu->addAction(saveAsAct);
       fileMenu->addSeparator();
       fileMenu->addAction(exitAct);
 
       editMenu = new QMenu(tr("Edit"), this);
       editMenu->addAction(blurAct);
+      editMenu->addAction(grayscaleAct);
       editMenu->addAction(sharpenAct);
 
       menuBar()->addMenu(fileMenu);
