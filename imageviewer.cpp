@@ -41,9 +41,12 @@
          drawImage();
          scaleFactor = 1.0;
 
+
+         saveAct->setEnabled(true);
+         saveAsAct->setEnabled(true);
          blurAct->setEnabled(true);
-         sharpenAct->setEnabled(true);
          grayscaleAct->setEnabled(true);
+         sharpenAct->setEnabled(true);
          imageLabel->adjustSize();
 
      }
@@ -110,11 +113,14 @@
  void ImageViewer::blur(){
      QImage * newImage = m_image;
 
-     int kernel [3][3]= {{0,-1,0},
-                         {-1,5,-1},
-                         {0,-1,0}};
-         int kernelSize = 3;
-         int sumKernel = 1;
+     int kernel [5][5]= {{0,0,1,0,0},
+                         {0,1,3,1,0},
+                         {1,3,7,3,1},
+                         {0,1,3,1,0},
+                         {0,0,1,0,0}};
+         int kernelSize = 5;
+         int sumKernel = 27;
+
      int r,g,b;
      QColor color;
 
@@ -194,10 +200,12 @@
 
       saveAct = new QAction(tr("Save"), this);
       saveAct->setShortcut(tr("Ctrl+S"));
+      saveAct->setEnabled(false);
       connect(saveAct, SIGNAL(triggered()), this, SLOT(save()));
 
       saveAsAct = new QAction(tr("SaveAs"), this);
       saveAsAct->setShortcut(tr("Ctrl+S"));
+      saveAsAct->setEnabled(false);
       connect(saveAsAct, SIGNAL(triggered()), this, SLOT(saveAs()));
 
       blurAct = new QAction(tr("Blur"), this);
