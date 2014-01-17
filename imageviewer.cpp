@@ -1,6 +1,5 @@
 #include <QtGui>
 #include "imageviewer.h"
-#include <QDebug>
 
  ImageViewer::ImageViewer()
  {
@@ -42,11 +41,26 @@
          scaleFactor = 1.0;
 
          blurAct->setEnabled(true);
+         saveAct->setEnabled(true);
          sharpenAct->setEnabled(true);
 
              imageLabel->adjustSize();
      }
  }
+
+void ImageViewer::save()
+  {
+
+      if (!m_fileName.isEmpty()){
+          if (m_image->isNull()) {
+              QMessageBox::information(this, tr("Image Viewer"),
+                                       tr("Cannot save %1.").arg(m_fileName));
+              return;
+          }
+
+          m_image->save(m_fileName);
+      }
+  }
 
  void ImageViewer::blur(){
      QImage * newImage = m_image;
@@ -131,6 +145,10 @@
       openAct = new QAction(tr("&Open"), this);
       openAct->setShortcut(tr("Ctrl+O"));
       connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
+     
+      saveAct = new QAction(tr("Save"), this);
+      saveAct->setShortcut(tr("Ctrl+O"));
+      connect(saveAct, SIGNAL(triggered()), this, SLOT(save()));
 
       blurAct = new QAction(tr("Blur"), this);
       blurAct->setEnabled(false);
@@ -150,6 +168,7 @@
   {
       fileMenu = new QMenu(tr("&File"), this);
       fileMenu->addAction(openAct);
+      fileMenu->addAction(saveAct);
       fileMenu->addSeparator();
       fileMenu->addAction(exitAct);
 
