@@ -29,24 +29,24 @@
      }
      imageLabel->setPixmap(QPixmap::fromImage(*m_image));
  }
-
- void ImageViewer::open()
+ 
+void ImageViewer::open()
  {
-     QString fileName = QFileDialog::getOpenFileName(this,
+     m_fileName = QFileDialog::getOpenFileName(this,
                                      tr("Open File"), " ",
                                      tr("JPEG (*.jpg *,jpeg );; BitMap(*.bmp);; TIF (*.tif);; PNG(*.png)"));
-     if (!fileName.isEmpty()) {
-         m_image = new QImage(fileName);
+     if (!m_fileName.isEmpty()) {
+         m_image = new QImage(m_fileName);
          drawImage();
          scaleFactor = 1.0;
 
          blurAct->setEnabled(true);
-         saveAct->setEnabled(true);
          sharpenAct->setEnabled(true);
-
-             imageLabel->adjustSize();
+         imageLabel->adjustSize();
+         
      }
  }
+ 
 
 void ImageViewer::save()
   {
