@@ -60,10 +60,10 @@
 
  void ImageViewer::save()
   {
-
+      // Checking if the filename is empty
       if (!m_fileName.isEmpty()){
           if (m_image->isNull()) {
-
+               // If the constructor returns a null image a QMessageBox will alert the user
               QMessageBox::information(this, tr("Image Viewer"),
                                        tr("Cannot save %1.").arg(m_fileName));
               return;
