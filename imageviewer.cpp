@@ -110,13 +110,11 @@
  void ImageViewer::blur(){
      QImage * newImage = m_image;
 
-     int kernel [5][5]= {{0,0,1,0,0},
-                         {0,1,3,1,0},
-                         {1,3,7,3,1},
-                         {0,1,3,1,0},
-                         {0,0,1,0,0}};
-     int kernelSize = 5;
-     int sumKernel = 27;
+     int kernel [3][3]= {{0,-1,0},
+                         {-1,5,-1},
+                         {0,-1,0}};
+         int kernelSize = 3;
+         int sumKernel = 1;
      int r,g,b;
      QColor color;
 
