@@ -166,14 +166,16 @@
      QImage * newImage = m_image;
 
      // The matrix for the sharpening
-     int kernel [5][5]= {{0,0,-1,0,0},
-                         {0,-1,6,-1,0},
-                         {-1,6,14,6,-1},
-                         {0,-1,6,-1,0},
-                         {0,0,-1,0,0}};
+        int kernel [5][5]= {
+                                     { -1, -1, -1, -1, -1},
+                                     {-1,  2,  2,  2, -1},
+                                     {-1,  2,  8,  2, -1},
+                                     {-1,  2,  2,  2, -1},
+                                     {-1, -1, -1, -1, -1}};
 
-     int kernelSize = 5;
-     int sumKernel = 27;
+          int kernelSize = 5;
+          int sumKernel = 10;
+     
      int r,g,b;
      QColor color;
 
