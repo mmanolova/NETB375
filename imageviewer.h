@@ -36,6 +36,7 @@ private slots:
     void grayscale();
     void blur();
     void sharpen();
+    void otsu();
 
 private:
     void createActions();
@@ -50,6 +51,7 @@ private:
     QAction *saveAct;
     QAction *saveAsAct;
     QAction *grayscaleAct;
+    QAction *otsuAct;
     QAction *exitAct;
     QAction *blurAct;
     QAction *sharpenAct;

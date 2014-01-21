@@ -13,8 +13,10 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        imageviewer.cpp
+        imageviewer.cpp \
+    imagehelper.cpp
 
-HEADERS  += imageviewer.h
+HEADERS  += imageviewer.h \
+    imagehelper.h
 
 FORMS    += imageviewer.ui

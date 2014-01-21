@@ -1,6 +1,7 @@
 #include <QtGui>
 #include "imageviewer.h"
-
+#include "imagehelper.h"
+#include <iostream>
 
  ImageViewer::ImageViewer()
  {
@@ -53,6 +54,7 @@
          blurAct->setEnabled(true);
          grayscaleAct->setEnabled(true);
          sharpenAct->setEnabled(true);
+         otsuAct->setEnabled(true);
          imageLabel->adjustSize();
 
      }
@@ -116,9 +118,20 @@
       // Overwrite the imageLabel with the new grayscale one
       imageLabel->setPixmap(QPixmap::fromImage(*m_image));
   }
+    void ImageViewer::otsu()
+    {
+        this->grayscale();
+        ImageHelper* helper = new ImageHelper();
+        unsigned int* histogram = helper->getHistogram(m_image);
+        unsigned int treshold = helper->calculateOtsuTreshold(histogram, m_image->width() * m_image->height() );
 
+        std::cout << "Treshold: " << treshold << std::endl;
+        helper->binarizeImage(m_image, treshold);
+        drawImage();
+        delete helper;
+    }
  void ImageViewer::blur(){
-     QImage * newImage = m_image;
+     m_image;
 
 
      // the matrix for the blurring
@@ -133,8 +146,8 @@
      int r,g,b;
      QColor color;
 
-     for(int x=kernelSize/2; x<newImage->width()-(kernelSize/2); x++){
-         for(int y=kernelSize/2; y<newImage->height()-(kernelSize/2); y++){
+     for(int x=kernelSize/2; x<m_image->width()-(kernelSize/2); x++){
+         for(int y=kernelSize/2; y<m_image->height()-(kernelSize/2); y++){
 
              r = 0;
              g = 0;
@@ -155,11 +168,12 @@
              g = qBound(0, g/sumKernel, 255);
              b = qBound(0, b/sumKernel, 255);
 
-             newImage->setPixel(x,y, qRgb(r,g,b));
+             m_image->setPixel(x,y, qRgb(r,g,b));
 
          }
      }
      drawImage();
+
  }
 
  void ImageViewer::sharpen(){
@@ -233,6 +247,10 @@
       grayscaleAct->setEnabled(false);
       connect(grayscaleAct, SIGNAL(triggered()), this, SLOT(grayscale()));
 
+      otsuAct = new QAction(tr("Black and White"), this);
+      otsuAct->setEnabled(false);
+      connect(otsuAct, SIGNAL(triggered()), this, SLOT(otsu()));
+
 
       sharpenAct = new QAction(tr("Sharpen"), this);
       sharpenAct->setEnabled(false);
@@ -259,6 +277,7 @@
       editMenu->addAction(blurAct);
       editMenu->addAction(grayscaleAct);
       editMenu->addAction(sharpenAct);
+      editMenu->addAction(otsuAct);
 
       menuBar()->addMenu(fileMenu);
       menuBar()->addMenu(editMenu);
