@@ -177,7 +177,7 @@
  }
 
  void ImageViewer::sharpen(){
-     QImage * newImage = m_image;
+
 
      // The matrix for the sharpening
         int kernel [5][5]= {
@@ -193,8 +193,8 @@
      int r,g,b;
      QColor color;
 
-     for(int x=kernelSize/2; x<newImage->width()-(kernelSize/2); x++){
-         for(int y=kernelSize/2; y<newImage->height()-(kernelSize/2); y++){
+     for(int x=kernelSize/2; x<m_image->width()-(kernelSize/2); x++){
+         for(int y=kernelSize/2; y<m_image->height()-(kernelSize/2); y++){
 
              r = 0;
              g = 0;
@@ -214,7 +214,7 @@
              g = qBound(0, g/sumKernel, 255);
              b = qBound(0, b/sumKernel, 255);
 
-             newImage->setPixel(x,y, qRgb(r,g,b));
+             m_image->setPixel(x,y, qRgb(r,g,b));
 
          }
      }
