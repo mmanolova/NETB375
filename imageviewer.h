@@ -59,6 +59,7 @@ private:
     QMenu   *editMenu;
     QImage   *m_image;
     QString   m_fileName;
+    bool m_binarized;
 };
 
 #endif

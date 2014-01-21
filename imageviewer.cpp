@@ -120,6 +120,9 @@
   }
     void ImageViewer::otsu()
     {
+        if(m_binarized)
+            return;
+
         this->grayscale();
         ImageHelper* helper = new ImageHelper();
         unsigned int* histogram = helper->getHistogram(m_image);
@@ -129,6 +132,7 @@
         helper->binarizeImage(m_image, treshold);
         drawImage();
         delete helper;
+        m_binarized = true;
     }
  void ImageViewer::blur(){
      m_image;
